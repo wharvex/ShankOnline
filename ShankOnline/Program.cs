@@ -11,8 +11,12 @@ namespace ShankOnline
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            const string csFieldName = "ConnectionStrings__ShankOnlineDb";
-            var connectionString = builder.Configuration[csFieldName];
+            const string csFieldName = "ShankOnlineDb";
+            var connectionString =
+                builder.Configuration.GetConnectionString(csFieldName)
+                ?? throw new InvalidOperationException(
+                    $"Connection string field name {csFieldName} not found"
+                );
             builder.Services.AddDbContext<ApplicationDbContext>(
                 options =>
                     options.UseSqlServer(
